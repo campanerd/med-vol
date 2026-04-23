@@ -1,0 +1,69 @@
+===== SPRING BOOT =====
+
+Dependências:
+- Lombok:
+  -> Reduz código repetitivo (getters, setters, construtores)
+  -> Anotações: @Data, @Getter, @Setter, @AllArgsConstructor, @NoArgsConstructor
+
+- Spring Boot DevTools:
+  -> Reinício automático da aplicação
+  -> Atualização automática (LiveReload)
+  -> Usado apenas em desenvolvimento
+
+- Spring Web:
+  -> Criação de APIs REST
+  -> Permite usar requisições HTTP (GET, POST, PUT, DELETE)
+
+
+DTO(Data Transfer Object):
+- Usado para transferir dados entre camadas
+- Evita expor diretamente entidades do banco
+- Pode ser:
+  -> Request (entrada de dados)
+  -> Response (saída de dados)
+
+
+Request (organização):
+- Classe usada para receber dados da requisição
+- Geralmente um DTO
+- Exemplo: ProdutoRequest
+
+
+Anotações:
+
+@RestController:
+- Define um controller REST
+- Retorna dados em JSON automaticamente
+
+@RequestMapping:
+- Define a rota base da API
+- Ex: "/produtos"
+
+@GetMapping:
+- Requisição do tipo GET
+- Usado para buscar dados
+
+
+Tipos:
+
+public:
+- Modificador de acesso
+- Pode ser acessado por qualquer classe
+
+enum:
+- Tipo com valores fixos
+- Usado para estados ou categorias
+- Ex: PENDENTE, APROVADO, CANCELADO
+
+record:
+- Tipo especial do Java para criar classes imutáveis
+- Usado principalmente para DTOs
+- Já cria automaticamente:
+  -> getters
+  -> construtor
+  -> toString, equals, hashCode
+
+- Não permite alterar os valores depois de criado
+
+Exemplo:
+record ProdutoDTO(String nome, Double preco) {}
