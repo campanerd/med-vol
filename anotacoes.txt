@@ -14,6 +14,30 @@ Dependências:
   -> Criação de APIs REST
   -> Permite usar requisições HTTP (GET, POST, PUT, DELETE)
 
+Spring Data JPA:
+-> Facilita o acesso ao banco de dados
+-> Usa ORM (Mapeamento Objeto-Relacional)
+-> Permite criar interfaces como JpaRepository
+-> Evita escrever SQL manual na maioria dos casos
+-> Trabalha com entidades usando @Entity
+
+Validation (Bean Validation):
+-> Validação de dados recebidos na API
+-> Muito usado com DTOs
+-> Anotações: @NotNull, @NotBlank, @Size, @Email
+-> Integrado com @Valid nos controllers
+
+Flyway:
+-> Controle de versão do banco de dados
+-> Executa scripts SQL automaticamente na inicialização
+-> Mantém histórico das alterações do banco
+-> Scripts ficam em: resources/db/migration
+-> Padrão de nome: V1__nome.sql, V2__nome.sql
+
+Flyway MySQL:
+-> Integra o Flyway com banco MySQL
+-> Permite rodar migrations específicas para MySQL
+
 
 DTO(Data Transfer Object):
 - Usado para transferir dados entre camadas
