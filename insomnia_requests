@@ -1,0 +1,107 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Requisições
+meta:
+  id: wrk_d6c8be04f2f644c7b6dbbaf427543f9a
+  created: 1776877339804
+  modified: 1776877339804
+  description: ""
+collection:
+  - url: http://localhost:8080/medicos
+    name: Cadastro de Médico
+    meta:
+      id: req_cb124d23a4c24adfa03c98af3cad6499
+      created: 1776877354370
+      modified: 1776885628027
+      isPrivate: false
+      description: ""
+      sortKey: -1776877354370
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        "nome": "Rodrigo Ferreira",
+        "email": "rodrigo.ferreira@voll.med",
+        "crm": "123456",
+        "especialidade": "ORTOPEDIA",
+        "endereco": {
+            "logradouro": "rua 1",
+            "bairro": "bairro",
+            "cep": "12345678",
+            "cidade": "Brasilia",
+            "uf": "DF",
+            "numero": "1",
+            "complemento": "complemento"
+            }
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://localhost:8080/pacientes
+    name: Cadastro de Pacientes
+    meta:
+      id: req_8992416848624aa98b09baac89e2c263
+      created: 1776889040294
+      modified: 1776889670782
+      isPrivate: false
+      description: ""
+      sortKey: -1776889040294
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        "nome": "Rodrigo Ferreira",
+        "email": "rodrigo.ferreira@voll.med",
+        "cpf": "123456789-11",
+        "endereco": {
+            "logradouro": "rua 1",
+            "bairro": "bairro",
+            "cep": "12345678",
+            "cidade": "Brasilia",
+            "uf": "DF",
+            "numero": "1",
+            "complemento": "complemento"
+            }
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/12.5.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_389db6a8c6d21bd83a5649b03c498d09b0045814
+    created: 1776877339831
+    modified: 1776877339831
+environments:
+  name: Base Environment
+  meta:
+    id: env_389db6a8c6d21bd83a5649b03c498d09b0045814
+    created: 1776877339827
+    modified: 1776877339827
+    isPrivate: false
