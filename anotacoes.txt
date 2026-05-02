@@ -95,3 +95,6 @@ record ProdutoDTO(String nome, Double preco) {}
 Embedded (Embeddable Attribute):
 - nao cria uma tabela no banco e um relacionamento
 - fica em uma classe separada, mas o banco considera que ela e outra classe fazem parte da mesma tabela
+
+Injeção de dependêmcias:
+- adicionar encima do atributo - @Autowired
