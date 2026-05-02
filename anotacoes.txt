@@ -98,3 +98,7 @@ Embedded (Embeddable Attribute):
 
 Injeção de dependêmcias:
 - adicionar encima do atributo - @Autowired
+
+Migrations:
+-Trabalhar com o banco
+- sempre que for usar, parar o projeto
