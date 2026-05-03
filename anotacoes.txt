@@ -102,3 +102,9 @@ Injeção de dependêmcias:
 Migrations:
 -Trabalhar com o banco
 - sempre que for usar, parar o projeto
+
+@NotNull:
+-obriga a nao deixar ficar null o campo
+
+@NotBlank
+-para campos strings
