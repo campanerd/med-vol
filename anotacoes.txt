@@ -111,6 +111,8 @@ Migrations:
 
 Get:
 -listar infos
+-size: qntd de elementos
+page: numero do elemento
 
 Post:
 -inserir infos
