@@ -108,3 +108,9 @@ Migrations:
 
 @NotBlank
 -para campos strings
+
+Get:
+-listar infos
+
+Post:
+-inserir infos
