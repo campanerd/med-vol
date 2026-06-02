@@ -1,0 +1,16 @@
+meta {
+  name: Atualização de Pacientes
+  type: http
+  seq: 9
+}
+
+put {
+  url: http://localhost:8080/pacientes
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

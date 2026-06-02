@@ -1,0 +1,34 @@
+meta {
+  name: Cadastro de Médico
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/medicos
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nome": "Carla Souza",
+    "email": "carlasouza@gmail",
+    "crm": "123777",
+    "telefone": "12345678",
+    "especialidade": "GINECOLOGIA",
+    "endereco": {
+      "logradouro": "rua 1",
+      "bairro": "bairro",
+      "cep": "12345678",
+      "cidade": "Brasilia",
+      "uf": "DF",
+      "numero": "",
+      "complemento": "complemento"
+    }
+  }
+}

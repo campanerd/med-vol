@@ -1,0 +1,32 @@
+meta {
+  name: Cadastro de Paciente
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/pacientes
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nome": "Davi Campaner",
+    "telefone": "1195086424",
+    "email": "campanas@teste.com",
+    "cpf": "50020030020",
+    "endereco": {
+      "logradouro": "rua 1",
+      "bairro": "bairro",
+      "cep": "12345678",
+      "cidade": "Brasilia",
+      "uf": "DF",
+      "numero": "1",
+      "complemento": "complemento"}
+  }
+}
