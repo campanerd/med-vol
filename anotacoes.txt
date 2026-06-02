@@ -1,118 +1,187 @@
 ===== SPRING BOOT =====
 
-Dependências:
-- Lombok:
-  -> Reduz código repetitivo (getters, setters, construtores)
-  -> Anotações: @Data, @Getter, @Setter, @AllArgsConstructor, @NoArgsConstructor
-
-- Spring Boot DevTools:
-  -> Reinício automático da aplicação
-  -> Atualização automática (LiveReload)
-  -> Usado apenas em desenvolvimento
-
-- Spring Web:
-  -> Criação de APIs REST
-  -> Permite usar requisições HTTP (GET, POST, PUT, DELETE)
-
-Spring Data JPA:
--> Facilita o acesso ao banco de dados
--> Usa ORM (Mapeamento Objeto-Relacional)
--> Permite criar interfaces como JpaRepository
--> Evita escrever SQL manual na maioria dos casos
--> Trabalha com entidades usando @Entity
-
-Validation (Bean Validation):
--> Validação de dados recebidos na API
--> Muito usado com DTOs
--> Anotações: @NotNull, @NotBlank, @Size, @Email
--> Integrado com @Valid nos controllers
-
-Flyway:
--> Controle de versão do banco de dados
--> Executa scripts SQL automaticamente na inicialização
--> Mantém histórico das alterações do banco
--> Scripts ficam em: resources/db/migration
--> Padrão de nome: V1__nome.sql, V2__nome.sql
-
-Flyway MySQL:
--> Integra o Flyway com banco MySQL
--> Permite rodar migrations específicas para MySQL
+Framework Java para criar aplicações (principalmente APIs REST) com
+configuração automática e servidor embutido (Tomcat).
 
 
-DTO(Data Transfer Object):
-- Usado para transferir dados entre camadas
-- Evita expor diretamente entidades do banco
-- Pode ser:
-  -> Request (entrada de dados)
-  -> Response (saída de dados)
+===== DEPENDÊNCIAS PRINCIPAIS =====
+
+Spring Web
+- Cria APIs REST (GET, POST, PUT, DELETE)
+
+Spring Data JPA
+- Acesso ao banco via ORM (mapeamento objeto-relacional)
+- Cria queries automáticas a partir de interfaces (JpaRepository)
+- Evita escrever SQL manual
+
+Bean Validation
+- Valida dados de entrada usando annotations (@NotBlank, @Email, etc.)
+- Ativada nos controllers com @Valid
+
+Flyway
+- Versiona o banco de dados
+- Roda scripts SQL automaticamente ao iniciar
+- Local: src/main/resources/db/migration
+- Padrão de nome: V1__cria_tabela_x.sql, V2__adiciona_campo_y.sql
+
+Lombok
+- Gera código repetitivo via annotations
+- @Getter, @Setter, @NoArgsConstructor, @AllArgsConstructor,
+  @EqualsAndHashCode, @Data
+
+DevTools
+- Reinicia a aplicação ao salvar arquivos (só em dev)
 
 
-Request (organização):
-- Classe usada para receber dados da requisição
-- Geralmente um DTO
-- Exemplo: ProdutoRequest
+===== ARQUITETURA =====
+
+Camadas típicas:
+  Controller  ->  recebe HTTP, devolve JSON
+  Service     ->  regras de negócio (opcional em projetos pequenos)
+  Repository  ->  acessa o banco (JpaRepository)
+  Entity      ->  classe mapeada a uma tabela
+  DTO         ->  objeto de transferência (entrada/saída da API)
+
+DTO (Data Transfer Object)
+- Separa a representação da API do modelo do banco
+- Request: dados que ENTRAM (ex: DadosCadastroPaciente)
+- Response: dados que SAEM (ex: DadosDetalhamentoPaciente)
+- Geralmente usa `record` (imutável e enxuto)
 
 
-Anotações:
+===== ANNOTATIONS =====
 
-@RestController:
-- Define um controller REST
-- Retorna dados em JSON automaticamente
+-- Controller / HTTP --
+@RestController        Marca a classe como controller REST (resposta em JSON)
+@RequestMapping("x")   Define a rota base da classe
+@GetMapping            GET    -> consultar
+@PostMapping           POST   -> criar
+@PutMapping            PUT    -> atualizar
+@DeleteMapping         DELETE -> excluir
+@PathVariable          Captura valor da URL: /pacientes/{id}
+@RequestBody           Lê o corpo JSON da requisição e converte em objeto
+@Valid                 Dispara as validações do Bean Validation no DTO
 
-@RequestMapping:
-- Define a rota base da API
-- Ex: "/produtos"
+-- JPA / Entidade --
+@Entity                Marca a classe como entidade (mapeada a uma tabela)
+@Table(name = "x")     Define o nome da tabela
+@Id                    Marca a chave primária
+@GeneratedValue        Como o ID é gerado (IDENTITY = auto-increment)
+@Column                Configura uma coluna específica (nome, unique, etc.)
+@Embedded              Insere campos de outra classe na MESMA tabela
+@Embeddable            Marca a classe que será embutida (ex: Endereco)
 
-@GetMapping:
-- Requisição do tipo GET
-- Usado para buscar dados
+-- Validação (Bean Validation) --
+@NotNull               Não pode ser null
+@NotBlank              String não pode ser null/vazia/só espaços
+@Email                 Formato de email válido
+@Pattern(regexp = "")  Validação por regex (ex: \\d{11} -> 11 dígitos)
+@Size(min=, max=)      Tamanho mínimo/máximo de string ou lista
+
+-- Outros --
+@Autowired             Injeção de dependência pelo Spring
+@Transactional         Garante transação no banco (rollback em caso de erro)
 
 
-Tipos:
+===== ENTIDADE x DTO =====
 
-public:
-- Modificador de acesso
-- Pode ser acessado por qualquer classe
+Entidade (Paciente.java)
+- @Entity, @Table, @Id, @GeneratedValue
+- Representa a tabela do banco
+- Tem id, ativo, todos os campos
 
-enum:
-- Tipo com valores fixos
-- Usado para estados ou categorias
-- Ex: PENDENTE, APROVADO, CANCELADO
+DTO de cadastro (DadosCadastroPaciente.java)
+- record com @NotBlank, @Email, @Pattern, etc.
+- Só os campos que o cliente envia
 
-record:
-- Tipo especial do Java para criar classes imutáveis
-- Usado principalmente para DTOs
-- Já cria automaticamente:
-  -> getters
-  -> construtor
-  -> toString, equals, hashCode
+DTO de detalhamento (DadosDetalhamentoPaciente.java)
+- record sem validação
+- Só os campos que a API devolve
+- Tem um construtor que recebe a entidade e extrai os campos
 
-- Não permite alterar os valores depois de criado
+
+===== RESPONSEENTITY =====
+
+Encapsula a resposta HTTP (status + headers + body).
+
+ResponseEntity.ok(obj)              -> 200 + body
+ResponseEntity.created(uri).body()  -> 201 + Location + body
+ResponseEntity.noContent().build()  -> 204 (sem body, p/ DELETE)
+ResponseEntity.notFound().build()   -> 404
+
+UriComponentsBuilder: monta a URL do recurso criado para o header Location.
+
+
+===== REPOSITORY =====
+
+interface PacienteRepository extends JpaRepository<Paciente, Long>
+
+Métodos prontos:
+- save(entidade)
+- findById(id)        -> Optional<T>, busca de verdade
+- getReferenceById(id) -> retorna proxy lazy (mais leve, mas falha tarde)
+- findAll(Pageable)   -> com paginação
+- deleteById(id)
+
+Métodos customizados por nome:
+- findAllByAtivoTrue(Pageable)  -> Spring gera a query a partir do nome
+
+
+===== PAGINAÇÃO =====
+
+Pageable + @PageableDefault no controller:
+
+  @GetMapping
+  ResponseEntity<Page<X>> listar(
+      @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao
+  )
+
+Query params suportados:
+  ?size=10          quantidade por página
+  ?page=0           número da página (começa em 0)
+  ?sort=nome,asc    campo e direção
+
+
+===== SOFT DELETE =====
+
+Em vez de deletar de verdade, marca um campo `ativo = false`.
+Vantagens: mantém histórico e referências.
+Atenção: campos UNIQUE (ex: CPF) continuam "ocupados" no banco.
 
 Exemplo:
-record ProdutoDTO(String nome, Double preco) {}
+  public void excluir() { this.ativo = false; }
 
-Embedded (Embeddable Attribute):
-- nao cria uma tabela no banco e um relacionamento
-- fica em uma classe separada, mas o banco considera que ela e outra classe fazem parte da mesma tabela
+E nas listagens: findAllByAtivoTrue(...).
 
-Injeção de dependêmcias:
-- adicionar encima do atributo - @Autowired
 
-Migrations:
--Trabalhar com o banco
-- sempre que for usar, parar o projeto
+===== MIGRATIONS (FLYWAY) =====
 
-@NotNull:
--obriga a nao deixar ficar null o campo
+- Cada alteração no banco vira um novo arquivo V{n}__descricao.sql
+- Nunca alterar uma migration já executada (gera erro de checksum)
+- Para testar mudança numa migration em desenvolvimento:
+    1. parar a aplicação
+    2. apagar o banco (ou só a tabela flyway_schema_history)
+    3. subir de novo
 
-@NotBlank
--para campos strings
 
-Get:
--listar infos
--size: qntd de elementos
-page: numero do elemento
+===== JAVA: TIPOS ÚTEIS =====
 
-Post:
--inserir infos
+record
+- Classe imutável e curta, ideal para DTOs
+- Gera automaticamente: construtor, getters (nome do campo, sem "get"),
+  equals, hashCode, toString
+- Ex: record DadosCadastroX(String nome, String email) {}
+
+enum
+- Conjunto fixo de valores
+- Ex: enum Especialidade { ORTOPEDIA, CARDIOLOGIA, GINECOLOGIA }
+
+
+===== FLUXO DE UM POST =====
+
+1. Cliente envia JSON -> @RequestBody converte em DTO
+2. @Valid roda as validações; se falhar, devolve 400 automaticamente
+3. Controller cria a entidade a partir do DTO
+4. repository.save(entidade) -> INSERT no banco
+5. Controller monta a URI do novo recurso
+6. Retorna ResponseEntity.created(uri).body(DTO de detalhamento)
